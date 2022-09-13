@@ -21,19 +21,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import java.io.ByteArrayOutputStream;
+import com.example.piceditor.databinding.ActivityMainBinding;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
 import java.util.Random;
 
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
@@ -41,6 +35,7 @@ import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_PERMISSIONS = 1234;
+    private ActivityMainBinding binding;
     private static final String[] PERMISSIONS ={
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -62,7 +57,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
         init();
 
 
@@ -100,17 +98,10 @@ public class MainActivity extends AppCompatActivity {
     private static final  int MAX_PIXEL_COUNT =2048;
     private int[] pixels;
     private int pixelCount = 0;
-    private ImageView imageview;
 
     private void init(){
-        final Button selectImageButton = findViewById(R.id.selectImage);
-        final Button crop_ImageButton = findViewById(R.id.feature_crop);
-        final Button flipVertical_ImageButton = findViewById(R.id.feature_flipVertical);
-        final Button flipHorizontal_ImageButton = findViewById(R.id.feature_FlipHorizontal);
-        final Button save_ImageButton = findViewById(R.id.feature_SaveGalary);
 
-        imageview = findViewById(R.id.image_view);
-        selectImageButton.setOnClickListener(new View.OnClickListener() {
+        binding.selectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -121,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(chooserIntent,REQUEST_PICK_IMAGE);
             }
         });
-        crop_ImageButton.setOnClickListener(new View.OnClickListener() {
+        binding.featureCrop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_SHORT).show();
@@ -151,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                imageview.setImageBitmap(bitmapEdit);
+                                binding.imageView.setImageBitmap(bitmapEdit);
                             }
                         });
                     }
@@ -160,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        flipVertical_ImageButton.setOnClickListener(new View.OnClickListener() {
+        binding.featureFlipVertical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Thread(){
@@ -171,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                          runOnUiThread(new Runnable() {
                              @Override
                              public void run() {
-                                 imageview.setImageBitmap(bitmap);
+                                 binding.imageView.setImageBitmap(bitmap);
                              }
                          });
                     }
@@ -179,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        flipHorizontal_ImageButton.setOnClickListener(new View.OnClickListener() {
+        binding.featureFlipHorizontal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Thread(){
@@ -190,14 +181,14 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                imageview.setImageBitmap(bitmap);
+                                binding.imageView.setImageBitmap(bitmap);
                             }
                         });
                     }
                 }.start();
             }
         });
-        save_ImageButton.setOnClickListener(new View.OnClickListener() {
+        binding.featureSaveGalary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -299,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
               runOnUiThread(new Runnable() {
                   @Override
                   public void run() {
-                      imageview.setImageBitmap(bitmap);
+                      binding.imageView.setImageBitmap(bitmap);
                       dialog.cancel();
                   }
               });
